@@ -9,10 +9,10 @@
 # - Adding new empty fields to the cashtransactions.csv file so another program will add value to this newly created fields (those are the country codes of intermediary banks, 
 #   beneficiaries and other countries not available in the original cashtransactions.csv file)
 
+import sys
 import pandas as pd
 from sqlalchemy import create_engine
 import pyodbc as pc
-import sys
 
 class dbConnection:
     server = 'LAPTOP-TC7K0E1C\SQLEXPRESS'
@@ -27,17 +27,13 @@ def LoadFileIntoDataFrame(fileName):
 #Loads into the database the transactions in the csv file passed as an argument to the function
 def LoadTransactions(fileName):
     
-    try:
-        txnDataFrame = LoadFileIntoDataFrame(fileName)
+    txnDataFrame = LoadFileIntoDataFrame(fileName)
 
-        #creates the connection to the SQL Server Database based on the dbConnection parameters
-        dbCon = dbConnection
+    #creates the connection to the SQL Server Database based on the dbConnection parameters
+    dbCon = dbConnection
 
-        eng = create_engine("mssql+pyodbc://"+ dbCon.user+":"+dbCon.password+"@"+dbCon.server+"/db_pandas_class?driver=SQL+Server")
-        txnDataFrame.to_sql('TRANSACTIONS', eng, if_exists='append', index=False)
-        return 1
-    except:
-        return 0
+    eng = create_engine("mssql+pyodbc://"+ dbCon.user+":"+dbCon.password+"@"+dbCon.server+"/AML?driver=SQL+Server")
+    txnDataFrame.to_sql('TRANSACTIONS', eng, if_exists='append', index=False)
     
 # --------------------------------------------------------------------------------------------------------------------------
 # Function that add pipes to the end of the cashtransactions file (field delimiter for additional Country fields to be added by the program that enriches the file data)
