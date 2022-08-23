@@ -1,4 +1,5 @@
 #this program creates a wordcloud based on the worldcloud.txt file
+from turtle import isvisible
 import matplotlib.pyplot as plt
 import wikipedia
 from wordcloud import WordCloud, STOPWORDS
@@ -8,8 +9,6 @@ def getWikiContent(queryString):
     page = wikipedia.page(title)
     return page.content
 
-querystring = "global warming" 
-text = getWikiContent(querystring)
 stopwords = STOPWORDS
 
 wc = WordCloud(
@@ -20,6 +19,17 @@ wc = WordCloud(
     , width = 500
 )
 
+isValidContent = False
+
+while isValidContent != True:
+    querystring = input('For which subject do you want to see a WordCloud?')
+    if querystring != '':
+        isValidContent = True
+        
+text = getWikiContent(querystring)
+
+
 wc.generate(text)
 
+#Saves WordCloud to a file in the same folder as the .py program file
 wc.to_file('wordcloud.png')
